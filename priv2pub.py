@@ -43,8 +43,8 @@ class CharacterTable(object):
     '''
     def __init__(self, chars, maxlen):
         self.chars = sorted(set(chars))
-        self.char_indices = dict((c, i) for i, c in enumerate(self.chars))
-        self.indices_char = dict((i, c) for i, c in enumerate(self.chars))
+        self.char_indices = {c: i for i, c in enumerate(self.chars)}
+        self.indices_char = dict(enumerate(self.chars))
         self.maxlen = maxlen
 
     def encode(self, C, maxlen=None):

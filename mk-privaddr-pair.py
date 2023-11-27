@@ -5,9 +5,8 @@ import sys
 
 def seed2hpriv(seed):
     master_secret= seed.encode('utf-8')
-    hk=hmac.HMAC(key=b"Bitcoin seed", msg=master_secret, digestmod=hashlib.sha512)  
-    hp=hk.hexdigest()[0:64]
-    return (hp)
+    hk=hmac.HMAC(key=b"Bitcoin seed", msg=master_secret, digestmod=hashlib.sha512)
+    return hk.hexdigest()[:64]
 
 seed = 'awake book subject inch gentle blur grant damage process float month clown'
 master_secret= seed.encode('utf-8')

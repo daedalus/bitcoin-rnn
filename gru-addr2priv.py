@@ -37,8 +37,8 @@ class CharacterTable(object):
     '''
     def __init__(self, chars, maxlen):
         self.chars = sorted(set(chars))
-        self.char_indices = dict((c, i) for i, c in enumerate(self.chars))
-        self.indices_char = dict((i, c) for i, c in enumerate(self.chars))
+        self.char_indices = {c: i for i, c in enumerate(self.chars)}
+        self.indices_char = dict(enumerate(self.chars))
         self.maxlen = maxlen
 
     def encode(self, C, maxlen=None):
@@ -83,7 +83,7 @@ ctable = CharacterTable(chars, MAXLEN)
 #note here input is a column text file with private-key, and public-address, so the src is public-addr,
 # and label is the private key, both in this case are in compressed 'wif' format, but all cases need to 
 # considered.
- 
+
 src = 'privaddr-pair.txt'
 label_file = 'privaddr-pair.txt'
 
@@ -129,7 +129,7 @@ while len(questions) < TRAINING_SIZE:
 
     # Answers can be of maximum size (Class) DIGITS + 1
     ans = labels[i]
-    ans = ans[:len(ans)-1][:DIGITS] # remove /n and char > DIGITS
+    ans = ans[:-1][:DIGITS]
     if len(ans) == 0 :
         ans = '0' # set to zero if no classification
     ans += ' ' * (DIGITS + 1 - len(ans))
@@ -202,7 +202,7 @@ for iteration in range(1, 200):  # was 200
               validation_data=(X_val, y_val))
     ###
     # Select 10 samples from the validation set at random so we can visualize errors
-    for i in range(10):
+    for _ in range(10):
         ind = np.random.randint(0, len(X_val))
         rowX, rowy = X_val[np.array([ind])], y_val[np.array([ind])]
         preds = model.predict_classes(rowX, verbose=0)
@@ -212,11 +212,15 @@ for iteration in range(1, 200):  # was 200
         print('Q', q[::-1] if INVERT else q)
         print('T', correct)
 
-        print(colors.ok + '☑' + colors.close if correct == guess else colors.fail + '☒' + colors.close, guess)
+        print(
+            f'{colors.ok}☑{colors.close}'
+            if correct == guess
+            else f'{colors.fail}☒{colors.close}',
+            guess,
+        )
 
         print('---')
 
-        # save and/or load model Keras
 '''
         # serialize model to JSON
 model_json = model.to_json()
